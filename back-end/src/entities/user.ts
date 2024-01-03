@@ -1,26 +1,7 @@
-import { ArgsType, Field, ID, ObjectType } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { IsEmail, MinLength } from "class-validator";
-import { hash } from "bcrypt";
-
-@ArgsType()
-export class CreateOrUpdateUser {
-  @Field()
-  @IsEmail()
-  email!: string;
-
-  @Field()
-  @MinLength(1)
-  firstName!: string;
-
-  @Field()
-  @MinLength(1)
-  lastName!: string;
-
-  @Field()
-  @MinLength(12)
-  password!: string;
-}
+import { compare, hash } from "bcrypt";
+import { CreateOrUpdateUser, SignInUser } from "./user.args";
 
 @Entity("AppUser")
 @ObjectType()
@@ -62,6 +43,17 @@ class User extends BaseEntity {
     // TODO: return user-friendly error message when email already used
     const savedUser = await newUser.save();
     return savedUser;
+  }
+
+  static async getUserWithEmailAndPassword({
+    email,
+    password,
+  }: SignInUser): Promise<User> {
+    const user = await User.findOne({ where: { email } });
+    if (!user || !(await compare(password, user.hashedPassword))) {
+      throw new Error("INVALID_CREDENTIALS");
+    }
+    return user;
   }
 }
 
