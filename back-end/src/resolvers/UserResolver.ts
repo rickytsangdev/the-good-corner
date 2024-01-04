@@ -1,6 +1,8 @@
-import { Args, Mutation, Resolver } from "type-graphql";
+import { Args, Ctx, Mutation, Resolver } from "type-graphql";
 import User from "../entities/user";
 import { CreateOrUpdateUser, SignInUser } from "../entities/user.args";
+import { Context } from "..";
+import { setUserSessionIdInCookie } from "../utils/cookie";
 
 @Resolver()
 export class UserResolver {
@@ -10,8 +12,12 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  signIn(@Args() args: SignInUser) {
-    // TODO: set session ID and persist it in cookie
-    return User.getUserWithEmailAndPassword(args);
+  async signIn(
+    @Args() args: SignInUser,
+    @Ctx() context: Context
+  ): Promise<User> {
+    const { user, session } = await User.signIn(args);
+    setUserSessionIdInCookie(context.res, session);
+    return user;
   }
 }

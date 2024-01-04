@@ -1,7 +1,14 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { compare, hash } from "bcrypt";
 import { CreateOrUpdateUser, SignInUser } from "./user.args";
+import UserSession from "./userSession";
 
 @Entity("AppUser")
 @ObjectType()
@@ -24,6 +31,9 @@ class User extends BaseEntity {
 
   @Column()
   hashedPassword!: string;
+
+  @OneToMany(() => UserSession, (session) => session.user)
+  sessions!: UserSession[];
 
   constructor(user?: CreateOrUpdateUser) {
     super();
@@ -54,6 +64,15 @@ class User extends BaseEntity {
       throw new Error("INVALID_CREDENTIALS");
     }
     return user;
+  }
+
+  static async signIn({
+    email,
+    password,
+  }: SignInUser): Promise<{ user: User; session: UserSession }> {
+    const user = await this.getUserWithEmailAndPassword({ email, password });
+    const session = await UserSession.saveNewSession(user);
+    return { user, session };
   }
 }
 
