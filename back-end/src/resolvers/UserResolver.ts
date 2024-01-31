@@ -1,4 +1,4 @@
-import { Args, Ctx, Mutation, Resolver } from "type-graphql";
+import { Args, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import User from "../entities/user";
 import { CreateOrUpdateUser, SignInUser } from "../entities/user.args";
 import { Context } from "..";
@@ -19,5 +19,11 @@ export class UserResolver {
     const { user, session } = await User.signIn(args);
     setUserSessionIdInCookie(context.res, session);
     return user;
+  }
+
+  @Authorized()
+  @Query(() => User)
+  async myProfile(@Ctx() { user }: Context): Promise<User> {
+    return user as User;
   }
 }
