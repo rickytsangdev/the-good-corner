@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import * as styled from "./ArticleCard.styled";
 import { BaseLink } from "../Link/BaseLink";
 import { GetAdsForCategoryQuery } from "@/gql/graphql";
@@ -15,7 +13,7 @@ export default function ArticleCard({
   return (
     <styled.Container>
       <BaseLink href={`/articles/${id}`}>
-        <styled.Image src={`/images/${id}.webp`} />
+        <styled.Image src={`/file-hosting/${id}.jpg`} />
         <styled.Text>
           <styled.Title>{title}</styled.Title>
           <styled.Price>

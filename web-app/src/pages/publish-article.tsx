@@ -36,7 +36,7 @@ const CREATE_AD_FORM = gql`
   }
 `;
 
-const GET_MY_PROFILE_PUBLISH_ARTICLE = gql`
+export const GET_MY_PROFILE_PUBLISH_ARTICLE = gql`
   query GetMyProfilePublishArticle {
     myProfile {
       id
@@ -49,6 +49,7 @@ export default function PublishArticlePage() {
     useQuery<GetMyProfilePublishArticleQuery>(GET_MY_PROFILE_PUBLISH_ARTICLE);
 
   // track file state
+  const [fileInForm, setFileInForm] = useState<File | null>(null);
   const [formData, setFormData] = useState<CreateAdFormMutationVariables>({
     title: "",
     price: 0,
@@ -68,6 +69,22 @@ export default function PublishArticlePage() {
     CreateAdFormMutationVariables
   >(CREATE_AD_FORM);
 
+  const uploadImage = async (id: string) => {
+    const { readAndCompressImage } = await import("browser-image-resizer");
+    if (fileInForm) {
+      const resizedJpgFile = await readAndCompressImage(fileInForm, {
+        quality: 0.75,
+        maxWidth: 1440,
+      });
+      const body = new FormData();
+      body.append("file", resizedJpgFile, `${id}.jpg`);
+      await fetch("/file-hosting", {
+        method: "POST",
+        body,
+      });
+    }
+  };
+
   const createArticle = async () => {
     const { data } = await createAdMutation({
       variables: {
@@ -78,10 +95,9 @@ export default function PublishArticlePage() {
       },
     });
 
-    // requête POST au service file-hosting avec le fichier provenant de l'état
-    // bonus : compresser l'image et la transformer en jpeg avant de l'envoyer
-
     if (data && data.createAd.id) {
+      const { id } = data.createAd;
+      await uploadImage(id);
       router.push(`/articles/${data.createAd.id}?publishConfirmation=true`);
     }
   };
@@ -92,6 +108,8 @@ export default function PublishArticlePage() {
     <NarrowPageContainer>
       <MainContentTitle>Publier une annonce</MainContentTitle>
       <Form
+        // TODO: add ARIA label to reusable Form component
+        aria-label="form"
         onSubmit={(event) => {
           event.preventDefault();
           createArticle();
@@ -104,7 +122,7 @@ export default function PublishArticlePage() {
             onChange={(event) => {
               const { files } = event.target;
               if (files) {
-                console.log(files[0]);
+                setFileInForm(files[0]);
               }
             }}
           />
