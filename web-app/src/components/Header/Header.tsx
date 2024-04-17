@@ -22,9 +22,10 @@ const GET_MY_PROFILE_HEADER = gql`
 
 export default function Header() {
   const { data, loading } = useQuery<GetMyProfileHeaderQuery>(
-    GET_MY_PROFILE_HEADER
+    GET_MY_PROFILE_HEADER,
   );
 
+  // TODO: Refactor Header
   return (
     <styled.Header>
       <styled.MainMenu>

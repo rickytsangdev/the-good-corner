@@ -3,7 +3,7 @@ import { MockedProvider, MockedResponse } from "@apollo/client/testing";
 
 import PublishArticlePage, {
   GET_MY_PROFILE_PUBLISH_ARTICLE,
-} from "./publish-article";
+} from "../../pages/publish-article";
 import { GetMyProfilePublishArticleQuery } from "@/gql/graphql";
 
 jest.mock("next/router", () => ({ useRouter: jest.fn() }));
@@ -24,7 +24,7 @@ describe("PublishArticlePage", () => {
       render(
         <MockedProvider mocks={[MOCK_GET_MY_PROFILE_SIGNED_IN]}>
           <PublishArticlePage />
-        </MockedProvider>
+        </MockedProvider>,
       );
 
       expect(screen.getByRole("progressbar")).toBeInTheDocument();
@@ -44,7 +44,7 @@ describe("PublishArticlePage", () => {
         render(
           <MockedProvider mocks={[MOCK_GET_MY_PROFILE_NOT_SIGNED_IN]}>
             <PublishArticlePage />
-          </MockedProvider>
+          </MockedProvider>,
         );
 
         await waitFor(() => {
@@ -63,7 +63,7 @@ describe("PublishArticlePage", () => {
         render(
           <MockedProvider mocks={[MOCK_GET_MY_PROFILE_SIGNED_IN]}>
             <PublishArticlePage />
-          </MockedProvider>
+          </MockedProvider>,
         );
 
         await waitFor(() => {
