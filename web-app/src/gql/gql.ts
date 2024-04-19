@@ -21,7 +21,7 @@ const documents = {
     types.GetAdsForCategoryDocument,
   "\n  query GetAdsHomePage {\n    ads {\n      id\n      title\n      price\n    }\n  }\n":
     types.GetAdsHomePageDocument,
-  "\n  mutation CreateAdForm(\n    $title: String!\n    $price: Float!\n    $categoryId: Int!\n    $description: String!\n  ) {\n    createAd(\n      title: $title\n      price: $price\n      categoryId: $categoryId\n      description: $description\n    ) {\n      id\n    }\n  }\n":
+  "\n  mutation CreateAdForm(\n    $title: String!\n    $description: String!\n    $price: Float!\n    $categoryId: Int!\n    $tagIds: [String!]!\n  ) {\n    createAd(\n      title: $title\n      description: $description\n      price: $price\n      categoryId: $categoryId\n      tagIds: $tagIds\n    ) {\n      id\n    }\n  }\n":
     types.CreateAdFormDocument,
   "\n  query GetMyProfilePublishArticle {\n    myProfile {\n      id\n    }\n  }\n":
     types.GetMyProfilePublishArticleDocument,
@@ -75,8 +75,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "\n  mutation CreateAdForm(\n    $title: String!\n    $price: Float!\n    $categoryId: Int!\n    $description: String!\n  ) {\n    createAd(\n      title: $title\n      price: $price\n      categoryId: $categoryId\n      description: $description\n    ) {\n      id\n    }\n  }\n",
-): (typeof documents)["\n  mutation CreateAdForm(\n    $title: String!\n    $price: Float!\n    $categoryId: Int!\n    $description: String!\n  ) {\n    createAd(\n      title: $title\n      price: $price\n      categoryId: $categoryId\n      description: $description\n    ) {\n      id\n    }\n  }\n"];
+  source: "\n  mutation CreateAdForm(\n    $title: String!\n    $description: String!\n    $price: Float!\n    $categoryId: Int!\n    $tagIds: [String!]!\n  ) {\n    createAd(\n      title: $title\n      description: $description\n      price: $price\n      categoryId: $categoryId\n      tagIds: $tagIds\n    ) {\n      id\n    }\n  }\n",
+): (typeof documents)["\n  mutation CreateAdForm(\n    $title: String!\n    $description: String!\n    $price: Float!\n    $categoryId: Int!\n    $tagIds: [String!]!\n  ) {\n    createAd(\n      title: $title\n      description: $description\n      price: $price\n      categoryId: $categoryId\n      tagIds: $tagIds\n    ) {\n      id\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

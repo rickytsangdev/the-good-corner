@@ -64,11 +64,11 @@ export type Mutation = {
 
 export type MutationCreateAdArgs = {
   categoryId: Scalars["Int"]["input"];
-  description?: InputMaybe<Scalars["String"]["input"]>;
+  description: Scalars["String"]["input"];
   location?: InputMaybe<Scalars["String"]["input"]>;
   picture?: InputMaybe<Scalars["String"]["input"]>;
   price: Scalars["Float"]["input"];
-  tagIds?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  tagIds: Array<Scalars["String"]["input"]>;
   title: Scalars["String"]["input"];
 };
 
@@ -94,12 +94,12 @@ export type MutationSignUpArgs = {
 
 export type MutationUpdateAdArgs = {
   categoryId: Scalars["Int"]["input"];
-  description?: InputMaybe<Scalars["String"]["input"]>;
+  description: Scalars["String"]["input"];
   id: Scalars["ID"]["input"];
   location?: InputMaybe<Scalars["String"]["input"]>;
   picture?: InputMaybe<Scalars["String"]["input"]>;
   price: Scalars["Float"]["input"];
-  tagIds?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  tagIds: Array<Scalars["String"]["input"]>;
   title: Scalars["String"]["input"];
 };
 
@@ -182,9 +182,10 @@ export type GetAdsHomePageQuery = {
 
 export type CreateAdFormMutationVariables = Exact<{
   title: Scalars["String"]["input"];
+  description: Scalars["String"]["input"];
   price: Scalars["Float"]["input"];
   categoryId: Scalars["Int"]["input"];
-  description: Scalars["String"]["input"];
+  tagIds: Array<Scalars["String"]["input"]> | Scalars["String"]["input"];
 }>;
 
 export type CreateAdFormMutation = {
@@ -442,6 +443,20 @@ export const CreateAdFormDocument = {
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
+            name: { kind: "Name", value: "description" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
             name: { kind: "Name", value: "price" },
           },
           type: {
@@ -464,13 +479,19 @@ export const CreateAdFormDocument = {
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "description" },
+            name: { kind: "Name", value: "tagIds" },
           },
           type: {
             kind: "NonNullType",
             type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
+              kind: "ListType",
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "String" },
+                },
+              },
             },
           },
         },
@@ -492,6 +513,14 @@ export const CreateAdFormDocument = {
               },
               {
                 kind: "Argument",
+                name: { kind: "Name", value: "description" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "description" },
+                },
+              },
+              {
+                kind: "Argument",
                 name: { kind: "Name", value: "price" },
                 value: {
                   kind: "Variable",
@@ -508,10 +537,10 @@ export const CreateAdFormDocument = {
               },
               {
                 kind: "Argument",
-                name: { kind: "Name", value: "description" },
+                name: { kind: "Name", value: "tagIds" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "description" },
+                  name: { kind: "Name", value: "tagIds" },
                 },
               },
             ],
